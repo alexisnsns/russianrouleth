@@ -1,5 +1,4 @@
 import * as React from "react";
-import { useDebounce } from "use-debounce";
 import {
   usePrepareSendTransaction,
   useSendTransaction,
@@ -32,7 +31,7 @@ const Pay = () => {
         <div>
           Successfully sent 0.001 ether to the casino.
           <div>
-            <a href={`https://etherscan.io/tx/${data?.hash}`}>
+            <a href={`https://etherscan.io/tx/${data?.hash}`} target="_blank">
               (See tx onEtherscan)
             </a>
           </div>
