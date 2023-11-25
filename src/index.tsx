@@ -23,7 +23,6 @@ const wagmiConfig = createConfig({
   publicClient,
 });
 
-console.log("wagmiConfig:", wagmiConfig);
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement

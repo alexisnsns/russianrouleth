@@ -1,5 +1,6 @@
 import React from "react";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
+import Pay from "./Pay";
 
 const App = () => {
   return (
@@ -15,7 +16,9 @@ const App = () => {
           <ConnectButton />
         </div>
         <h1>Welcome to the Russian Rouleth</h1>
-        <button className="button">Send 0.01 ETH</button>
+        <div>
+          <Pay />
+        </div>
       </header>
     </div>
   );
