@@ -15,10 +15,10 @@ const App = () => {
           <ConnectButton />
         </div>
         <h1>Welcome to the Russian Rouleth</h1>
-        <button>Send 0.01 ETH</button>
+        <button className="button">Send 0.01 ETH</button>
       </header>
     </div>
   );
-}
+};
 
 export default App;

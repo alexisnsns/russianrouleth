@@ -5,9 +5,11 @@ import App from "./App.tsx";
 import { configureChains, createConfig, WagmiConfig } from "wagmi";
 import { publicProvider } from "wagmi/providers/public";
 import { getDefaultWallets, RainbowKitProvider } from "@rainbow-me/rainbowkit";
-import { mainnet } from "wagmi/chains";
+import { mainnet, sepolia } from "wagmi/chains";
+import "@rainbow-me/rainbowkit/styles.css";
 
-const { chains, publicClient } = configureChains([mainnet], [publicProvider()]);
+// ToDo: add MainNet for prod
+const { chains, publicClient } = configureChains([sepolia], [publicProvider()]);
 
 const { connectors } = getDefaultWallets({
   appName: "Your App Name",
