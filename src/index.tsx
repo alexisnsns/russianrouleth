@@ -9,7 +9,24 @@ import { mainnet, sepolia } from "wagmi/chains";
 import "@rainbow-me/rainbowkit/styles.css";
 
 // ToDo: add MainNet for prod
-const { chains, publicClient } = configureChains([sepolia], [publicProvider()]);
+const { chains, publicClient } = configureChains(
+  [
+    {
+      ...sepolia,
+      rpcUrls: {
+        ...sepolia.rpcUrls,
+        // The default Sepolia ndoes are pretty overwhelmed
+        default: {
+          http: ["https://gateway.tenderly.co/public/sepolia"],
+        },
+        public: {
+          http: ["https://gateway.tenderly.co/public/sepolia"],
+        },
+      },
+    },
+  ],
+  [publicProvider()]
+);
 
 const { connectors } = getDefaultWallets({
   appName: "Your App Name",
@@ -22,7 +39,6 @@ const wagmiConfig = createConfig({
   connectors,
   publicClient,
 });
-
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement

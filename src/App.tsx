@@ -15,8 +15,9 @@ const App = () => {
         >
           <ConnectButton />
         </div>
-        <h1>Welcome to the Russian Rouleth</h1>
+        <h3>Welcome to the Russian Rouleth</h3>
         <div>
+          <h1>Send money to the casino:</h1>
           <Pay />
         </div>
       </header>
