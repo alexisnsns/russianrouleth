@@ -1,3 +1,3 @@
 # russianrouleth
 
-yay
+npm start
