@@ -1,3 +1,3 @@
 @public
-def greet() -> string[16]:
-    return "Hello, malevich!"
+def greet() -> string[12]:
+    return "Hello, anon!"
