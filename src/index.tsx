@@ -15,7 +15,6 @@ const { chains, publicClient } = configureChains(
       ...sepolia,
       rpcUrls: {
         ...sepolia.rpcUrls,
-        // The default Sepolia ndoes are pretty overwhelmed
         default: {
           http: ["https://gateway.tenderly.co/public/sepolia"],
         },
