@@ -1,5 +1,6 @@
 require("@nomiclabs/hardhat-vyper");
 require("@nomiclabs/hardhat-ethers");
+require('dotenv').config();
 
 module.exports = {
   vyper: {
@@ -8,7 +9,7 @@ module.exports = {
   networks: {
     sepolia: {
       url: "https://rpc.sepolia.org",
-      accounts: [import.meta.env.VITE_SEPOLIA],
+      accounts: [process.env.VITE_SEPOLIA],
     },
   },
 };

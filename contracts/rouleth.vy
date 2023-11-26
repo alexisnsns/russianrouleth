@@ -1,3 +1,4 @@
-@public
-def greet() -> string[12]:
-    return "Hello, anon!"
+@external
+@view
+def greet() -> String[12]:
+    return "1"
