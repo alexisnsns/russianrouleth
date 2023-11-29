@@ -1,43 +1,113 @@
-import * as React from "react";
-import {
-  usePrepareSendTransaction,
-  useSendTransaction,
-  useWaitForTransaction,
-} from "wagmi";
+import React from "react";
+import { ethers } from "ethers";
+import { useContractWrite, usePrepareContractWrite } from "wagmi";
 import { parseEther } from "viem";
 
-const Pay = () => {
-  const { config } = usePrepareSendTransaction({
-    to: "0x588eBB657Ca52d6fbDf8F52C760D53C1474e37Ed",
-    value: parseEther("0.001"),
-  });
-  const { data, sendTransaction } = useSendTransaction(config);
+const contractABI = [
+  {
+    name: "greet",
+    outputs: [
+      {
+        type: "string",
+        name: "",
+      },
+    ],
+    inputs: [],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    name: "play",
+    outputs: [],
+    inputs: [],
+    stateMutability: "payable",
+    type: "function",
+  },
+  {
+    stateMutability: "payable",
+    type: "fallback",
+  },
+  {
+    outputs: [],
+    inputs: [],
+    stateMutability: "nonpayable",
+    type: "constructor",
+  },
+  {
+    name: "owner",
+    outputs: [
+      {
+        type: "address",
+        name: "",
+      },
+    ],
+    inputs: [],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    name: "numPlayers",
+    outputs: [
+      {
+        type: "uint256",
+        name: "",
+      },
+    ],
+    inputs: [],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    name: "totalBalance",
+    outputs: [
+      {
+        type: "uint256",
+        name: "",
+      },
+    ],
+    inputs: [],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    name: "casinoBalance",
+    outputs: [
+      {
+        type: "uint256",
+        name: "",
+      },
+    ],
+    inputs: [],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    name: "locked",
+    outputs: [
+      {
+        type: "bool",
+        name: "",
+      },
+    ],
+    inputs: [],
+    stateMutability: "view",
+    type: "function",
+  },
+];
 
-  const { isLoading, isSuccess } = useWaitForTransaction({
-    hash: data?.hash,
+const Pay = () => {
+  const { data, isLoading, isSuccess, write } = useContractWrite({
+    address: "0x23ffd3a633F426BC4703b4207D2062B7f4938eD1",
+    abi: contractABI,
+    functionName: "play",
   });
 
   return (
-    <form
-      onSubmit={(e) => {
-        e.preventDefault();
-        sendTransaction?.();
-      }}
-    >
-      <button type="submit" disabled={isLoading}>
-        {isLoading ? "Sending..." : "Send"}
-      </button>
-      {isSuccess && (
-        <div>
-          Successfully sent 0.001 ether to the casino.
-          <div>
-            <a href={`https://etherscan.io/tx/${data?.hash}`} target="_blank">
-              (See tx onEtherscan)
-            </a>
-          </div>
-        </div>
-      )}
-    </form>
+    <div>
+      <button onClick={() => write({ value: parseEther("0.01") })}>Play</button>
+      {isLoading && <div>Check Wallet</div>}
+      {isSuccess && <div>Transaction: {JSON.stringify(data)}</div>}
+    </div>
   );
 };
 
