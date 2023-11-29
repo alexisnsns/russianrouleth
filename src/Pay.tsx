@@ -109,7 +109,7 @@ const Pay = () => {
 
   return (
     <div>
-      <button onClick={() => write({ value: parseEther("0.02") })}>Play</button>
+      <button onClick={() => write({ value: parseEther("0.01") })}>Play</button>
       {isLoading && <div>Check Wallet</div>}
       {isSuccess && <div>Transaction: {JSON.stringify(data)}</div>}
     </div>
