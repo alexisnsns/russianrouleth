@@ -2,6 +2,7 @@ import React from "react";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 import Pay from "./Pay";
 import EthValue from "./ethValue";
+import PlayerNumber from "./PlayerNumber";
 
 const App = () => {
   return (
@@ -14,6 +15,7 @@ const App = () => {
       </h1>
       <div className="rules">
         <h3>The rules are simple:</h3>
+        <PlayerNumber />
         <br />
         <p>Each player's entry fee for a round is 0.01 ETH.</p>
         <EthValue />
