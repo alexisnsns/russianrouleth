@@ -5,22 +5,27 @@ import { parseEther } from "viem";
 
 const contractABI = [
   {
-    name: "greet",
-    outputs: [
-      {
-        type: "string",
-        name: "",
-      },
-    ],
-    inputs: [],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
     name: "play",
     outputs: [],
     inputs: [],
     stateMutability: "payable",
+    type: "function",
+  },
+  {
+    name: "getPlayerNumber",
+    outputs: [
+      {
+        type: "uint256",
+        name: "",
+      },
+    ],
+    inputs: [
+      {
+        type: "address",
+        name: "player",
+      },
+    ],
+    stateMutability: "view",
     type: "function",
   },
   {
@@ -97,14 +102,14 @@ const contractABI = [
 
 const Pay = () => {
   const { data, isLoading, isSuccess, write } = useContractWrite({
-    address: "0x23ffd3a633F426BC4703b4207D2062B7f4938eD1",
+    address: "0x278503E3Acd6Efb77589A1581Fcd7D213D9A8d33",
     abi: contractABI,
     functionName: "play",
   });
 
   return (
     <div>
-      <button onClick={() => write({ value: parseEther("0.01") })}>Play</button>
+      <button onClick={() => write({ value: parseEther("0.02") })}>Play</button>
       {isLoading && <div>Check Wallet</div>}
       {isSuccess && <div>Transaction: {JSON.stringify(data)}</div>}
     </div>

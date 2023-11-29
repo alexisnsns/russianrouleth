@@ -4,12 +4,7 @@ numPlayers: public(uint256)
 totalBalance: public(uint256)
 casinoBalance: public(uint256)
 locked: public(bool)
-
-
-@external
-@view
-def greet() -> String[11]:
-    return "hello, anon"
+playerNumbers: HashMap[address, uint256]
 
 @external
 @payable
@@ -20,9 +15,10 @@ def play():
     if msg.value == 10**16:
       self.locked = True
 
-      # Add player to the list
-      self.players[self.numPlayers] = msg.sender
       self.numPlayers += 1
+      # Add player to the list
+      self.players[self.numPlayers - 1] = msg.sender
+      self.playerNumbers[msg.sender] = self.numPlayers
 
       # Increment total balance
       self.totalBalance += msg.value
@@ -53,8 +49,14 @@ def play():
       else:
           self.locked = False
     else:
-      # If the incorrect amount is sent, send it to the owner
-      send(self.owner, msg.value)
+        # Refund the incorrect amount to the sender
+        send(msg.sender, msg.value)
+
+
+@external
+@view
+def getPlayerNumber(player: address) -> uint256:
+    return self.playerNumbers[player]
 
 @external
 @payable
