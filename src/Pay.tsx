@@ -1,6 +1,5 @@
 import React from "react";
-import { ethers } from "ethers";
-import { useContractWrite, usePrepareContractWrite } from "wagmi";
+import { useContractWrite } from "wagmi";
 import { parseEther } from "viem";
 
 const contractABI = [
@@ -109,7 +108,12 @@ const Pay = () => {
 
   return (
     <div>
-      <button onClick={() => write({ value: parseEther("0.01") })}>Play</button>
+      <button
+        className="button"
+        onClick={() => write({ value: parseEther("0.01") })}
+      >
+        Spin the Barrel, Take Your Chance
+      </button>
       {isLoading && <div>Check Wallet</div>}
       {isSuccess && <div>Transaction: {JSON.stringify(data)}</div>}
     </div>
