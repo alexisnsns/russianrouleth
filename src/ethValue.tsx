@@ -25,7 +25,7 @@ const EthValue = () => {
   return (
     <>
       <p>
-        (At current market prices, this entry fee is around
+        (This represents around
         <i> {ethValue ?? "test"}</i>)
       </p>
     </>

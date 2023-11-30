@@ -100,8 +100,8 @@ const contractABI = [
 ];
 
 const Pay = () => {
-  const { data, isLoading, isSuccess, write } = useContractWrite({
-    address: "0x278503E3Acd6Efb77589A1581Fcd7D213D9A8d33",
+  const { data, isLoading, isSuccess, isError, write } = useContractWrite({
+    address: "0xCea1a35B11b167891B66893655bfA0727E8ee8ba",
     abi: contractABI,
     functionName: "play",
   });
@@ -114,8 +114,22 @@ const Pay = () => {
       >
         Spin the Barrel, Take Your Chance
       </button>
-      {isLoading && <div>Check Wallet</div>}
-      {isSuccess && <div>Transaction: {JSON.stringify(data)}</div>}
+      {isLoading && <div>Validate transaction on your wallet</div>}
+      {isError && <div>Error: you did not validate the transaction</div>}
+
+      {data && isSuccess && (
+        <div>
+          See your&nbsp;
+          <a
+            href={`https://sepolia.etherscan.io/tx/${data.hash}`}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            transaction
+          </a>
+          &nbsp;on the block explorer
+        </div>
+      )}
     </div>
   );
 };

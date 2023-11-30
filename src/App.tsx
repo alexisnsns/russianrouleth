@@ -15,14 +15,13 @@ const App = () => {
       </h1>
       <div className="rules">
         <h3>The rules are simple:</h3>
-        <PlayerNumber />
         <br />
         <p>Each player's entry fee for a round is 0.01 ETH.</p>
         <EthValue />
         <br />
         <p>
           Every 6 participants,
-          <b> the smart contract selects one at random.</b>
+          <b> the smart contract selects one of them at random.</b>
         </p>
         <p>
           This winner <b> receives instantly </b>a payout of approximately
@@ -41,6 +40,7 @@ const App = () => {
           You will be prompted to send 0.01 ETH, your entry fee, to the casino.
         </p>
         <Pay />
+        <PlayerNumber />
         <p>Feel free to read the casino Smart Contract here.</p>
       </div>
     </div>
