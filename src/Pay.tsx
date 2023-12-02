@@ -28,6 +28,35 @@ const contractABI = [
     type: "function",
   },
   {
+    name: "isLastWinner",
+    outputs: [
+      {
+        type: "bool",
+        name: "",
+      },
+    ],
+    inputs: [
+      {
+        type: "address",
+        name: "player",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    name: "getCurrentNumPlayers",
+    outputs: [
+      {
+        type: "uint256",
+        name: "",
+      },
+    ],
+    inputs: [],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
     stateMutability: "payable",
     type: "fallback",
   },
@@ -97,11 +126,23 @@ const contractABI = [
     stateMutability: "view",
     type: "function",
   },
+  {
+    name: "lastWinner",
+    outputs: [
+      {
+        type: "address",
+        name: "",
+      },
+    ],
+    inputs: [],
+    stateMutability: "view",
+    type: "function",
+  },
 ];
 
 const Pay = () => {
   const { data, isLoading, isSuccess, isError, write } = useContractWrite({
-    address: "0xCea1a35B11b167891B66893655bfA0727E8ee8ba",
+    address: "0x789a359D8Ef6765c659164c5b22f9B891F3143c9",
     abi: contractABI,
     functionName: "play",
   });

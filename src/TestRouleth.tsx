@@ -1,6 +1,5 @@
 import React from "react";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
-import Pay from "./Pay";
 import EthValue from "./ethValue";
 import PlayerNumber from "./PlayerNumber";
 import { useNavigate } from "react-router-dom";
@@ -43,7 +42,7 @@ const TestRouleth = () => {
         <p>
           You will be prompted to send 0.01 ETH, your entry fee, to the casino.
         </p>
-        <Pay />
+
         <PlayerNumber />
         <p>Feel free to read the casino Smart Contract here.</p>
       </div>
