@@ -3,7 +3,6 @@ import { ConnectButton } from "@rainbow-me/rainbowkit";
 import EthValue from "./ethValue";
 import Play from "./Play";
 import { useNavigate } from "react-router-dom";
-import barrel from "./barrel.png";
 
 const TestRouleth = () => {
   const navigate = useNavigate();
@@ -54,13 +53,12 @@ const TestRouleth = () => {
           </p>
           <Play />
         </div>
-        <img src={barrel} alt="barrel" className="barrel-img" />;
       </div>
 
       <footer className="footer">
         <i>
           <p>
-            Feel free to read the casino Smart Contract&nbsp;
+            Feel free to review the casino Smart Contract&nbsp;
             <a
               href="https://sepolia.etherscan.io/address/0x789a359D8Ef6765c659164c5b22f9B891F3143c9"
               target="_blank"

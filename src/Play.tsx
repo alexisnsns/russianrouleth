@@ -3,6 +3,7 @@ import { ethers } from "ethers";
 import { useAccount } from "wagmi";
 import { useContractWrite } from "wagmi";
 import { parseEther } from "viem";
+import barrel from "./barrel.png";
 
 const contractABI = [
   {
@@ -258,6 +259,11 @@ const Play = () => {
           {6 - poolSize} missing for the showdown to start.
         </p>
 
+        <img
+          src={barrel}
+          alt="barrel"
+          className={lastWinner &&  playerNumber === "0" ? "rotating barrel-img" : "barrel-img"}
+        />
         <p>
           {" "}
           <b>
@@ -270,7 +276,7 @@ const Play = () => {
           <p>
             {lastWinner &&
               playerNumber === "0" &&
-              "YOU WON THE ROULETTE! CONGRATULATIONS!"}
+              "YOU WON THE ROULETTE! CONGRATULATIONS! THE ETH IS BEING SENT TO YOUR WALLET!"}
           </p>
         </b>
       </div>

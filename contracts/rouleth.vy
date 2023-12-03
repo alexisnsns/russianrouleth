@@ -47,14 +47,14 @@ def play():
             self.totalBalance = 0
             for i in range(6):
                 if self.players[i] != ZERO_ADDRESS:
-                    self.playerNumbers[self.players[i]] = 0  # Properly reset player number
-                    self.players[i] = ZERO_ADDRESS  # Reset each player in the array
+                    self.playerNumbers[self.players[i]] = 0
+                    self.players[i] = ZERO_ADDRESS
             self.locked = False
         else:
             self.locked = False
 
     else:
-        # Refund the incorrect amount to the sender
+        # Refund any incorrect amount to the sender
         send(msg.sender, msg.value)
 
 
