@@ -143,7 +143,7 @@ const contractABI = [
 ];
 const contractAddress = "0x789a359D8Ef6765c659164c5b22f9B891F3143c9";
 
-const PlayerNumber = () => {
+const Play = () => {
   const { data, isLoading, isSuccess, isError, write } = useContractWrite({
     address: contractAddress,
     abi: contractABI,
@@ -216,8 +216,8 @@ const PlayerNumber = () => {
     return () => clearInterval(intervalId);
   }, [address]);
 
-  console.log("poolsize", poolSize.toString());
-  console.log("lastwinner?", lastWinner);
+  // console.log("poolsize", poolSize.toString());
+  // console.log("lastwinner?", lastWinner);
   // console.log("didwin", poolSize.toString() === "0" && !lastWinner);
 
   return (
@@ -229,11 +229,11 @@ const PlayerNumber = () => {
         >
           Spin the Barrel, Take Your Chance
         </button>
-        {isLoading && <div>Validate transaction on your wallet</div>}
-        {isError && <div>Error: you did not validate the transaction</div>}
+        {isLoading && <div>(Validate transaction on your wallet)</div>}
+        {isError && <div>(Error: you did not validate the transaction)</div>}
         {data && isSuccess && (
           <div>
-            See your&nbsp;
+            (See your&nbsp;
             <a
               href={`https://sepolia.etherscan.io/tx/${data.hash}`}
               target="_blank"
@@ -241,7 +241,7 @@ const PlayerNumber = () => {
             >
               transaction
             </a>
-            &nbsp;on the block explorer
+            &nbsp;on the block explorer)
           </div>
         )}
       </div>
@@ -254,8 +254,8 @@ const PlayerNumber = () => {
           </b>
         </p>
         <p>
-          Currently {String(poolSize)} players in the round. Only {6 - poolSize}{" "}
-          missing for the game to begin.
+          Currently {String(poolSize)} player(s) in the round. Only{" "}
+          {6 - poolSize} missing for the showdown to start.
         </p>
 
         <p>
@@ -268,7 +268,9 @@ const PlayerNumber = () => {
         </p>
         <b>
           <p>
-            {lastWinner && playerNumber === "0" && "YOU WON THE ROULETTE !"}
+            {lastWinner &&
+              playerNumber === "0" &&
+              "YOU WON THE ROULETTE! CONGRATULATIONS!"}
           </p>
         </b>
       </div>
@@ -276,4 +278,4 @@ const PlayerNumber = () => {
   );
 };
 
-export default PlayerNumber;
+export default Play;

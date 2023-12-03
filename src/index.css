@@ -1,18 +1,54 @@
+html,
+body {
+  height: 100vh;
+  margin: 0;
+}
 body {
   font-family: "Courier New", Courier, monospace;
   text-align: center;
   background-color: lightgrey;
 }
 
+.content-wrap {
+  min-height: 100vh;
+  margin-bottom: -50px;
+}
+
 .login {
   display: flex;
   justify-content: space-between;
   padding: 12;
+  margin-right: 8px;
+  margin-top: 8px;
 }
 
 .title {
   margin-top: 5vh;
-  margin-bottom: 5vh;
+  margin-bottom: 2vh;
+}
+
+p {
+  margin-top: 8px;
+  margin-bottom: 8px;
+}
+
+.content-wrap:after {
+  content: "";
+  display: block;
+}
+
+.footer,
+.content-wrap:after {
+  height: 50px;
+}
+
+.footer {
+  background: darkgrey;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  height: 50px;
 }
 
 .rules {
@@ -24,19 +60,74 @@ body {
 }
 
 .button {
-  background-color: purple;
-  border: none;
+  background-color: #2196f3; /* A nice shade of blue */
   color: white;
+  border: none;
   padding: 15px 32px;
-  text-align: center;
-  text-decoration: none;
-  display: inline-block;
-  margin: 4px 2px;
+  font-size: 16px;
+  font-weight: 500;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  border-radius: 4px; /* Material UI standard border radius */
   cursor: pointer;
-  border-radius: 4px;
-  transition: background-color 0.3s ease;
+  transition: background-color 0.3s ease, box-shadow 0.3s;
+  text-align: center;
+  display: inline-block;
+  margin: 16px;
+
+  /* Material UI-like shadow */
+  box-shadow: 0px 3px 1px -2px rgba(0,0,0,0.2),
+              0px 2px 2px 0px rgba(0,0,0,0.14),
+              0px 1px 5px 0px rgba(0,0,0,0.12);
 }
 
 .button:hover {
-  background-color: rgb(147, 36, 147);
+  background-color: #1976d2; /* A darker shade for hover */
+  /* Slightly elevated shadow on hover */
+  box-shadow: 0px 2px 4px -1px rgba(0,0,0,0.2),
+              0px 4px 5px 0px rgba(0,0,0,0.14),
+              0px 1px 10px 0px rgba(0,0,0,0.12);
+}
+
+.button:focus {
+  background-color: #1e88e5; /* Slightly lighter for focus */
+}
+
+
+.routing {
+  background-color: darkgray; /* Material UI primary color */
+  color: black;
+  border: none;
+  padding: 10px 20px;
+  text-transform: uppercase;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 1px;
+  border-radius: 4px; /* Material UI standard border radius */
+  cursor: pointer;
+  outline: none;
+  transition: background-color 0.3s, box-shadow 0.3s;
+  margin-left: 8px;
+  margin-top: 8px;
+
+  /* Material UI-like shadow */
+  box-shadow: 0px 3px 1px -2px rgba(0, 0, 0, 0.2),
+    0px 2px 2px 0px rgba(0, 0, 0, 0.14), 0px 1px 5px 0px rgba(0, 0, 0, 0.12);
+}
+
+.routing:hover {
+  background-color: #3700b3; /* A darker shade for hover */
+  /* Slightly elevated shadow on hover */
+  box-shadow: 0px 2px 4px -1px rgba(0, 0, 0, 0.2),
+    0px 4px 5px 0px rgba(0, 0, 0, 0.14), 0px 1px 10px 0px rgba(0, 0, 0, 0.12);
+}
+
+.routing:focus {
+  background-color: #5600e8; /* Slightly lighter for focus */
+}
+
+
+.barrel-img {
+  width: 15%;
+  border-radius: 10px;
 }

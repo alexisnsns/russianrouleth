@@ -8,7 +8,9 @@ const Rouleth = () => {
   return (
     <>
       <div className="login">
-        <button onClick={() => navigate("/test-rouleth")}>Go to TestNet</button>
+        <button className="routing" onClick={() => navigate("/test-rouleth")}>
+          Play on TestNet
+        </button>
         <ConnectButton />
       </div>
       <div>

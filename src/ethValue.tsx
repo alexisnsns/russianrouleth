@@ -24,10 +24,7 @@ const EthValue = () => {
 
   return (
     <>
-      <p>
-        (This represents around
-        <i> {ethValue ?? "test"}</i>)
-      </p>
+      <i> {ethValue}</i>
     </>
   );
 };
