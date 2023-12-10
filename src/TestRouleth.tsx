@@ -60,7 +60,7 @@ const TestRouleth = () => {
           <p>
             Feel free to review the casino Smart Contract&nbsp;
             <a
-              href="https://sepolia.etherscan.io/address/0x789a359D8Ef6765c659164c5b22f9B891F3143c9"
+              href="https://sepolia.etherscan.io/address/0x713D9f95f1b140aE1cAf910B56bEc75B20E95b96"
               target="_blank"
               rel="noopener noreferrer"
             >

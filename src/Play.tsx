@@ -94,34 +94,10 @@ const contractABI = [
     type: "function",
   },
   {
-    name: "totalBalance",
-    outputs: [
-      {
-        type: "uint256",
-        name: "",
-      },
-    ],
-    inputs: [],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
     name: "casinoBalance",
     outputs: [
       {
         type: "uint256",
-        name: "",
-      },
-    ],
-    inputs: [],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    name: "locked",
-    outputs: [
-      {
-        type: "bool",
         name: "",
       },
     ],
@@ -142,7 +118,7 @@ const contractABI = [
     type: "function",
   },
 ];
-const contractAddress = "0x789a359D8Ef6765c659164c5b22f9B891F3143c9";
+const contractAddress = "0x713D9f95f1b140aE1cAf910B56bEc75B20E95b96";
 
 const Play = () => {
   const { data, isLoading, isSuccess, isError, write } = useContractWrite({
@@ -262,7 +238,11 @@ const Play = () => {
         <img
           src={barrel}
           alt="barrel"
-          className={lastWinner &&  playerNumber === "0" ? "rotating barrel-img" : "barrel-img"}
+          className={
+            lastWinner && playerNumber === "0"
+              ? "rotating barrel-img"
+              : "barrel-img"
+          }
         />
         <p>
           {" "}
