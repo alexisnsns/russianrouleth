@@ -9,12 +9,13 @@ const TestRouleth = () => {
   const navigate = useNavigate();
 
   return (
-    <body>
+    <>
       <div className="content-wrap">
         <div className="login">
           <button className="routing" onClick={() => navigate("/")}>
             Play on MainNet
           </button>
+          <button className="routing">Sepolia Faucet</button>
           <ConnectButton />
         </div>
         <h1 className="title">
@@ -60,7 +61,7 @@ const TestRouleth = () => {
         <i>
           Feel free to review the casino Smart Contract&nbsp;
           <a
-            href="https://sepolia.etherscan.io/address/0x713D9f95f1b140aE1cAf910B56bEc75B20E95b96"
+            href="https://sepolia.etherscan.io/address/0x8060b01a9aae337f98f42e19b0a4abf7fd8e39c6"
             target="_blank"
             rel="noopener noreferrer"
           >
@@ -75,7 +76,7 @@ const TestRouleth = () => {
           <TwitterIcon size={24} round />
         </TwitterShareButton>
       </footer>
-    </body>
+    </>
   );
 };
 

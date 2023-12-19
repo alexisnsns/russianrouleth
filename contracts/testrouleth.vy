@@ -1,7 +1,7 @@
 owner: public(address)
 players: address[6]
 numPlayers: public(uint256)
-playerNumbers: HashMap[address, uint256]
+playerNumbers: HashMap[address, uint256[6]]
 lastWinner: public(address)
 
 @external
@@ -12,7 +12,11 @@ def play():
         self.numPlayers += 1
         # Add player to the list
         self.players[self.numPlayers - 1] = msg.sender
-        self.playerNumbers[msg.sender] = self.numPlayers
+
+        # Add the player number to their array in playerNumbers
+        playerArray: uint256[6] = self.playerNumbers[msg.sender]
+        playerArray[self.numPlayers - 1] = self.numPlayers
+        self.playerNumbers[msg.sender] = playerArray
 
         # Check if there are 6 players
         if self.numPlayers == 6:
@@ -37,15 +41,15 @@ def play():
             self.numPlayers = 0
             for i in range(6):
                 if self.players[i] != ZERO_ADDRESS:
-                    self.playerNumbers[self.players[i]] = 0
-                    self.players[i] = ZERO_ADDRESS
+                  self.playerNumbers[self.players[i]] = [0, 0, 0, 0, 0, 0]
+                  self.players[i] = ZERO_ADDRESS
     else:
         # Refund any incorrect amount to the sender
         send(msg.sender, msg.value)
 
 @external
 @view
-def getPlayerNumber(player: address) -> uint256:
+def getPlayerNumber(player: address) -> uint256[6]:
     return self.playerNumbers[player]
 
 @external

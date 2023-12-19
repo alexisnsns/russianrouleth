@@ -4,6 +4,7 @@ import { useAccount } from "wagmi";
 import { useContractWrite } from "wagmi";
 import { parseEther } from "viem";
 import barrel from "./barrel.png";
+import { BigNumber } from "ethers";
 
 const contractABI = [
   {
@@ -17,7 +18,7 @@ const contractABI = [
     name: "getPlayerNumber",
     outputs: [
       {
-        type: "uint256",
+        type: "uint256[6]",
         name: "",
       },
     ],
@@ -94,18 +95,6 @@ const contractABI = [
     type: "function",
   },
   {
-    name: "casinoBalance",
-    outputs: [
-      {
-        type: "uint256",
-        name: "",
-      },
-    ],
-    inputs: [],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
     name: "lastWinner",
     outputs: [
       {
@@ -118,7 +107,7 @@ const contractABI = [
     type: "function",
   },
 ];
-const contractAddress = "0x713D9f95f1b140aE1cAf910B56bEc75B20E95b96";
+const contractAddress = "0x8060b01a9aae337f98f42e19b0a4abf7fd8e39c6";
 
 const Play = () => {
   const { data, isLoading, isSuccess, isError, write } = useContractWrite({
@@ -127,7 +116,7 @@ const Play = () => {
     functionName: "play",
   });
 
-  const [playerNumber, setPlayerNumber] = useState<string>("0");
+  const [playerNumbers, setPlayerNumbers] = useState<number[]>([]);
   const { address } = useAccount();
 
   // @ts-ignore
@@ -138,8 +127,8 @@ const Play = () => {
   useEffect(() => {
     const getPlayerNumber = async () => {
       try {
-        const number = await contract.getPlayerNumber(address);
-        setPlayerNumber(number.toString());
+        const array = await contract.getPlayerNumber(address);
+        setPlayerNumbers(array.map((num: BigNumber) => num.toNumber()));
       } catch (error) {
         console.error("Error fetching player number:", error);
       }
@@ -223,13 +212,21 @@ const Play = () => {
         )}
       </div>
       <div>
-        <p>
-          <b>
-            {playerNumber === "0"
-              ? "You're not registered yet. Waiting for your transaction to display your player number..."
-              : `You've been succesfully registered to play in the current round with the number ${playerNumber}.`}
-          </b>
-        </p>
+        <div>
+          {playerNumbers.length === 0 ||
+          playerNumbers.every((num) => num === 0) ? (
+            "You're not registered yet. Waiting for your transaction to display your player number..."
+          ) : (
+            <>
+              <p>
+                You've been successfully registered to play in the current round
+                with the following number
+                {playerNumbers.filter((num) => num !== 0).length > 1 ? "s" : ""}
+                : {playerNumbers.filter((num) => num !== 0).join(", ")}.
+              </p>
+            </>
+          )}
+        </div>
         <p>
           Currently {String(poolSize)} player(s) in the round. Only{" "}
           {6 - poolSize} missing for the showdown to start.
@@ -239,7 +236,7 @@ const Play = () => {
           src={barrel}
           alt="barrel"
           className={
-            lastWinner && playerNumber === "0"
+            lastWinner && playerNumbers.every((num) => num === 0)
               ? "rotating barrel-img"
               : "barrel-img"
           }
@@ -248,14 +245,14 @@ const Play = () => {
           {" "}
           <b>
             {!lastWinner &&
-              playerNumber === "0" &&
+              playerNumbers.every((num) => num === 0) &&
               "You didn't win the last round of roulette. Try again!"}
           </b>
         </p>
         <b>
           <p>
             {lastWinner &&
-              playerNumber === "0" &&
+              playerNumbers.every((num) => num === 0) &&
               "YOU WON THE ROULETTE! CONGRATULATIONS! THE ETH IS BEING SENT TO YOUR WALLET!"}
           </p>
         </b>

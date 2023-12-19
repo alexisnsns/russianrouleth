@@ -1,16 +1,16 @@
 {
   "_format": "hh-vy-cache-1",
   "files": {
-    "/Users/alexis/code/russianrouleth/contracts/rouleth.vy": {
-      "lastModificationDate": 1702247548255,
-      "contentHash": "7e5dad1962d6de0ef008b8521b145258",
-      "sourceName": "contracts/rouleth.vy",
+    "/Users/alexis/code/russianrouleth/contracts/testrouleth.vy": {
+      "lastModificationDate": 1703027155257,
+      "contentHash": "2a8cfe1b1c5d0964f3f32559daf40532",
+      "sourceName": "contracts/testrouleth.vy",
       "vyperConfig": {
         "version": "0.2.4"
       },
       "versionPragma": "*",
       "artifacts": [
-        "rouleth"
+        "testrouleth"
       ]
     }
   }
