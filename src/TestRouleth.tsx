@@ -3,6 +3,7 @@ import { ConnectButton } from "@rainbow-me/rainbowkit";
 import EthValue from "./ethValue";
 import Play from "./Play";
 import { useNavigate } from "react-router-dom";
+import { TwitterShareButton, TwitterIcon } from "react-share";
 
 const TestRouleth = () => {
   const navigate = useNavigate();
@@ -57,18 +58,22 @@ const TestRouleth = () => {
 
       <footer className="footer">
         <i>
-          <p>
-            Feel free to review the casino Smart Contract&nbsp;
-            <a
-              href="https://sepolia.etherscan.io/address/0x713D9f95f1b140aE1cAf910B56bEc75B20E95b96"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              here
-            </a>
-            .
-          </p>
+          Feel free to review the casino Smart Contract&nbsp;
+          <a
+            href="https://sepolia.etherscan.io/address/0x713D9f95f1b140aE1cAf910B56bEc75B20E95b96"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            here
+          </a>
         </i>
+        &nbsp;// Share on&nbsp;
+        <TwitterShareButton
+          url="https://russianrouleth.xyz"
+          title="Let's play some russian rouleth.."
+        >
+          <TwitterIcon size={24} round />
+        </TwitterShareButton>
       </footer>
     </body>
   );
