@@ -1,6 +1,6 @@
 import React from "react";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
-import EthValue from "./ethValue";
+import EthValue from "./EthValue";
 import Play from "./Play";
 import { useNavigate } from "react-router-dom";
 import { TwitterShareButton, TwitterIcon } from "react-share";
