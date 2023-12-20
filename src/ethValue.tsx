@@ -11,7 +11,7 @@ const EthValue = () => {
         );
         const data = await response.json();
         const ethPriceInUsd = data.ethereum.usd;
-        const value = (0.01 * ethPriceInUsd).toFixed(2);
+        const value = ethPriceInUsd.toFixed(2);
         setEthValue(`$${value} USD`);
       } catch (error) {
         console.error("Error fetching ETH price:", error);
