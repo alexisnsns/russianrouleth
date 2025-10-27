@@ -4,7 +4,7 @@ import {
   Route,
   Navigate,
 } from "react-router-dom";
-import TestRouleth from "./TestRouleth";
+import TestRouleth from "./Rouleth";
 import Rouleth from "./Rouleth";
 
 const App = () => {

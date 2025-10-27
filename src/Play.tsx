@@ -6,6 +6,13 @@ import { parseEther } from "viem";
 import barrel from "./barrel.png";
 import { BigNumber } from "ethers";
 
+// Add this at the top of your file (or in a global.d.ts)
+declare global {
+  interface Window {
+    ethereum?: any;
+  }
+}
+
 const contractABI = [
   {
     name: "play",
@@ -119,13 +126,24 @@ const Play = () => {
   const [playerNumbers, setPlayerNumbers] = useState<number[]>([]);
   const { address } = useAccount();
 
-  // @ts-ignore
-  const provider = new ethers.providers.Web3Provider(window.ethereum);
-  const signer = provider.getSigner();
-  const contract = new ethers.Contract(contractAddress, contractABI, signer);
+  let provider: ethers.providers.Web3Provider | undefined;
+  let signer: ethers.Signer | undefined;
+  let contract: ethers.Contract | undefined;
+
+  if (typeof window.ethereum !== "undefined") {
+    provider = new ethers.providers.Web3Provider(window.ethereum);
+    signer = provider.getSigner();
+    contract = new ethers.Contract(contractAddress, contractABI, signer);
+  } else {
+    console.warn("No Ethereum provider found. Install MetaMask.");
+    // Optional: fallback to a read-only provider (e.g., Infura)
+    // contract = new ethers.Contract(contractAddress, contractABI, provider);
+  }
 
   useEffect(() => {
     const getPlayerNumber = async () => {
+      if (!contract) return; // Safe guard
+
       try {
         const array = await contract.getPlayerNumber(address);
         setPlayerNumbers(array.map((num: BigNumber) => num.toNumber()));
@@ -146,6 +164,8 @@ const Play = () => {
 
   useEffect(() => {
     const isLastWinner = async () => {
+      if (!contract) return; // Safe guard
+
       try {
         const bool = await contract.isLastWinner(address);
         setLastWinner(bool);
@@ -166,6 +186,8 @@ const Play = () => {
 
   useEffect(() => {
     const getPoolSize = async () => {
+      if (!contract) return; // Safe guard
+
       try {
         const pool = await contract.getCurrentNumPlayers();
         setPoolSize(pool);
