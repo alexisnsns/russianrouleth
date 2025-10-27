@@ -28,8 +28,8 @@ const { chains, publicClient } = configureChains(
 );
 
 const { connectors } = getDefaultWallets({
-  appName: "Your App Name",
-  projectId: "YOUR_PROJECT_ID",
+  appName: "rouleth",
+  projectId: "2d05a2fa95c4d9f74c4ef725b7af8bdd",
   chains,
 });
 
