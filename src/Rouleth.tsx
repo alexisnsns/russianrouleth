@@ -15,7 +15,7 @@ const TestRouleth = () => {
             window.open("https://sepoliafaucet.vercel.app/", "_blank")
           }
         >
-          Sepolia Faucet
+          ETH Faucet
         </button>
         <ConnectButton />
       </div>
@@ -30,7 +30,8 @@ const TestRouleth = () => {
         <div className="space-y-4 text-gray-700">
           <h3 className="text-xl font-semibold">The rules are simple:</h3>
           <p>
-            Each player's entry fee for a round is 0.01 ETH (≈ <EthValue />
+            Each player's entry fee for a round is 0.01 Sepolia ETH (≈{" "}
+            <EthValue />
             ).
           </p>
           <p>
@@ -57,6 +58,11 @@ const TestRouleth = () => {
             casino.
           </p>
 
+          <p>
+            For legal reasons, the roulette is only available on testnets for
+            now.
+          </p>
+
           <div className="flex justify-center mt-4">
             <Play />
           </div>
@@ -64,9 +70,18 @@ const TestRouleth = () => {
       </div>
 
       {/* Footer */}
-      <footer className="w-full max-w-3xl text-center mt-10 text-gray-500 text-sm space-y-2">
+      <footer className="w-full max-w-3xl mx-auto mt-10 text-center text-gray-500 text-xs space-y-2">
         <p>
-          Feel free to review the casino Smart Contract&nbsp;
+          &copy; {new Date().getFullYear()} Russian Rouleth. Code can be audited{" "}
+          <a
+            href="https://github.com/alexisnsns/russianrouleth"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-indigo-600 hover:underline"
+          >
+            here
+          </a>{" "}
+          and the smart contract{" "}
           <a
             href="https://sepolia.etherscan.io/address/0x8060b01a9aae337f98f42e19b0a4abf7fd8e39c6"
             target="_blank"
@@ -75,16 +90,21 @@ const TestRouleth = () => {
           >
             here
           </a>
+          .
         </p>
-        <div className="flex justify-center items-center space-x-2">
-          <span>// Share on</span>
-          <TwitterShareButton
-            url="https://russianrouleth.xyz"
-            title="Let's play some Russian Rouleth.."
+
+        <p>
+          <a
+            href={`https://twitter.com/intent/tweet?url=${encodeURIComponent(
+              "https://russianrouleth.xyz"
+            )}&text=${encodeURIComponent("Let's play some Russian Rouleth..")}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-blue-500 font-medium hover:underline"
           >
-            <TwitterIcon size={32} round />
-          </TwitterShareButton>
-        </div>
+            Share on Twitter
+          </a>
+        </p>
       </footer>
     </div>
   );
