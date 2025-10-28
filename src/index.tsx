@@ -9,7 +9,6 @@ import { WagmiProvider, http } from "wagmi";
 import { getDefaultConfig, RainbowKitProvider } from "@rainbow-me/rainbowkit";
 import { sepolia } from "wagmi/chains";
 
-// ✅ Create wagmi + rainbow config
 const config = getDefaultConfig({
   appName: "rouleth",
   projectId: "2d05a2fa95c4d9f74c4ef725b7af8bdd",
@@ -19,7 +18,6 @@ const config = getDefaultConfig({
   },
 });
 
-// ✅ Create QueryClient (required by wagmi v2)
 const queryClient = new QueryClient();
 
 const root = ReactDOM.createRoot(

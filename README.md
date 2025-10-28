@@ -7,6 +7,9 @@ Every 6 participants, the smart contract selects one winner at random, who insta
 
 Once a winner is chosen, a new round automatically starts, and anyone can join again.
 
+The game runs entirely on-chain, meaning all logic — from player entries to payouts — is handled by the smart contract itself:
+this roulette can't be rigged.
+
 Only on testnets right now as I'm not quite sure of the legal implications of this.
 
 Stack: Vyper (smart contracts), TS, hardHat, wagmi/viem.

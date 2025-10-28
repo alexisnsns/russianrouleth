@@ -5,11 +5,9 @@ import { parseEther } from "viem";
 import barrel from "./barrel.png";
 import { BigNumber } from "ethers";
 import { useRef } from "react";
-import { error } from "console";
 import { useWriteContract } from "wagmi";
 import { usePublicClient } from "wagmi";
 
-// Add this at the top of your file (or in a global.d.ts)
 declare global {
   interface Window {
     ethereum?: any;
@@ -117,7 +115,6 @@ const contractABI = [
     type: "function",
   },
 ];
-
 const contractAddress = "0x8060b01a9aae337f98f42e19b0a4abf7fd8e39c6";
 
 const Play = () => {
@@ -136,7 +133,7 @@ const Play = () => {
   const [playerNumbers, setPlayerNumbers] = useState<number[] | null>(null);
   // The number of users that have played in the current round
   const [poolSize, setPoolSize] = useState<number>(0);
-  // boolean: has the connected address won?
+  // Boolean: has the connected address won the last round?
   const [lastWinner, setLastWinner] = useState<boolean>(false);
 
   const nonZeroNumbers = playerNumbers?.filter((num) => num !== 0) || [];
@@ -189,7 +186,7 @@ const Play = () => {
     }
   };
 
-  // UseEffect when the address changes
+  // Reload states when the address changes
   useEffect(() => {
     setErrorMessage(null);
     setLastWinner(false);
@@ -200,16 +197,19 @@ const Play = () => {
 
     isLastWinner();
     getPlayerNumber();
+    getPoolSize();
   }, [address]);
 
-  // Get current pool size on load
+  // Get current pool size on page load
   useEffect(() => {
     getPoolSize();
   }, []);
 
+  // Transaction and play function
   const handlePlay = async () => {
     try {
       setGameStarted(true);
+      setErrorMessage(null);
       const hash = await writeContractAsync({
         address: contractAddress,
         abi: contractABI,
@@ -217,16 +217,26 @@ const Play = () => {
         value: parseEther("0.01"),
       });
 
-      console.log("tx hash:", hash);
       setTxHash(hash);
       const receipt = await publicClient!.waitForTransactionReceipt({ hash });
       console.log("receipt:", receipt);
       setGameStarted(false);
-      getPoolSize();
-      getPlayerNumber();
-    } catch (err) {
-      console.error("error:", err);
-      setErrorMessage("Transaction failed. Please try again.");
+      await isLastWinner();
+      await getPoolSize();
+      await getPlayerNumber();
+    } catch (err: any) {
+      console.error("error:", err.message);
+      if (err.message?.toLowerCase().includes("user rejected")) {
+        setErrorMessage("You canceled the transaction.");
+      } else if (
+        err.message?.toLowerCase().includes("connector not connected")
+      ) {
+        setErrorMessage(
+          "Wallet not connected — please connect to start playing."
+        );
+      } else {
+        setErrorMessage("Error: " + err.message);
+      }
     }
   };
 
@@ -245,12 +255,6 @@ const Play = () => {
             {errorMessage}
           </p>
         )}
-        {/* 
-        {isLoading && (
-          <span className="text-gray-500">
-            (Validate transaction on your wallet)
-          </span>
-        )} */}
       </div>
 
       {/* Player Info */}
@@ -264,18 +268,10 @@ const Play = () => {
                 fill="none"
                 viewBox="0 0 24 24"
               >
-                <circle
-                  className="opacity-25"
-                  cx="12"
-                  cy="12"
-                  r="10"
-                  stroke="currentColor"
-                  strokeWidth="4"
-                ></circle>
                 <path
                   className="opacity-75"
                   fill="currentColor"
-                  d="M4 12a8 8 0 018-8v4l3-3-3-3v4a8 8 0 00-8 8h4l-3 3 3 3h-4z"
+                  d="M12 2a10 10 0 0110 10h-2a8 8 0 10-8 8v2a10 10 0 010-20z"
                 ></path>
               </svg>
               <span className="text-indigo-700 font-medium text-sm">
@@ -303,7 +299,7 @@ const Play = () => {
 
         <p className="text-center text-lg font-semibold ">
           Currently {poolSize} player{poolSize !== 1 ? "s" : ""} in the round.{" "}
-          Only {6 - poolSize} missing for the showdown to start!
+          {6 - poolSize} missing for the showdown to start!
         </p>
 
         {/* Winner Messages */}
@@ -312,10 +308,9 @@ const Play = () => {
             You didn't win the last round of roulette. Try again!
           </p>
         )}
-
         {lastWinner && (
           <p className="font-bold text-center text-green-600">
-            YOU WON THE ROULETTE! CONGRATULATIONS! THE ETH IS BEING SENT TO YOUR
+            YOU WON THE ROULETTE! CONGRATULATIONS! THE ETH HAS BEEN SENT TO YOUR
             WALLET!
           </p>
         )}

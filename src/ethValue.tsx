@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
 
+
+// COMPONENT NOT USED IN THE APP AS ITS TESTNET ONLY (FOR NOW!)
 const EthValue = () => {
   const [ethValue, setEthValue] = useState("Loading...");
 
