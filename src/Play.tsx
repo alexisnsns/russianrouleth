@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { ethers } from "ethers";
 import { useAccount } from "wagmi";
-import { useContractWrite } from "wagmi";
 import { parseEther } from "viem";
 import barrel from "./barrel.png";
 import { BigNumber } from "ethers";
 import { useRef } from "react";
 import { error } from "console";
+import { useWriteContract } from "wagmi";
+import { usePublicClient } from "wagmi";
 
 // Add this at the top of your file (or in a global.d.ts)
 declare global {
@@ -121,48 +122,24 @@ const contractAddress = "0x8060b01a9aae337f98f42e19b0a4abf7fd8e39c6";
 
 const Play = () => {
   const contractRef = useRef<ethers.Contract | null>(null);
-
-  const { data, isLoading, isSuccess, isError, write } = useContractWrite({
-    address: contractAddress,
-    abi: contractABI,
-    functionName: "play",
-    onError: (error: any) => {
-      console.error("error message", error.message);
-
-      // Check if it's an insufficient funds error
-      if (
-        error?.cause?.reason?.includes("insufficient funds") ||
-        error?.message?.includes("insufficient funds")
-      ) {
-        setErrorMessage(
-          "You don't have enough ETH in your wallet to play. You can top up your balance on the faucet: sepoliafaucet.vercel.app"
-        );
-      } else if (
-        error?.cause?.reason?.includes("Connector not found") ||
-        error?.message?.includes("Connector not found")
-      ) {
-        setErrorMessage("Please connect your wallet to play");
-      } else {
-        setErrorMessage("Transaction failed. Please try again.");
-      }
-    },
-    onSuccess: () => {
-      setErrorMessage(null); // Clear any previous errors
-    },
-  });
-
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);
-
-  const [playerNumbers, setPlayerNumbers] = useState<number[]>([]);
-  const [lastWinner, setLastWinner] = useState<boolean>(false);
-  const [poolSize, setPoolSize] = useState<number>(0);
   const { address } = useAccount();
+  const { writeContractAsync } = useWriteContract();
+  const publicClient = usePublicClient();
 
-  // Reset error message when the wallet address changes
-  useEffect(() => {
-    setErrorMessage(null);
-    setHasPlayed(false);
-  }, [address]);
+  // Message if there is an error in the TX
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  // has the player clicked the play button
+  const [gameStarted, setGameStarted] = useState<boolean>(false);
+  const [txHash, setTxHash] = useState<string | null>(null);
+
+  // The connected address position(s) in the current round
+  const [playerNumbers, setPlayerNumbers] = useState<number[] | null>(null);
+  // The number of users that have played in the current round
+  const [poolSize, setPoolSize] = useState<number>(0);
+  // boolean: has the connected address won?
+  const [lastWinner, setLastWinner] = useState<boolean>(false);
+
+  const nonZeroNumbers = playerNumbers?.filter((num) => num !== 0) || [];
 
   let provider: ethers.providers.Web3Provider | undefined;
   let signer: ethers.Signer | undefined;
@@ -180,74 +157,76 @@ const Play = () => {
     contract = new ethers.Contract(contractAddress, contractABI, signer);
   }
 
-  // Fetch player numbers
-  useEffect(() => {
-    if (!address || !contractRef.current) {
-      setPlayerNumbers([]);
-      return;
-    }
-
-    const getPlayerNumber = async () => {
-      try {
-        const array = await contractRef.current!.getPlayerNumber(address);
-        setPlayerNumbers(array.map((num: BigNumber) => num.toNumber()));
-      } catch (error) {
-        console.error(error);
-      }
-    };
-
-    getPlayerNumber(); // run immediately
-    const intervalId = setInterval(getPlayerNumber, 3000); // slower polling
-
-    return () => clearInterval(intervalId);
-  }, [address]);
-
-  // Check last winner
-  useEffect(() => {
-    const isLastWinner = async () => {
-      if (!contract || !address) return;
-      try {
-        const bool = await contract.isLastWinner(address);
-        setLastWinner(bool);
-      } catch (error) {
-        console.error(error);
-      }
-    };
-    isLastWinner();
-    const intervalId = setInterval(isLastWinner, 1000);
-    return () => clearInterval(intervalId);
-  }, [address]);
-
-  // Get current pool size
-  useEffect(() => {
-    const getPoolSize = async () => {
-      if (!contract) return;
-      try {
-        const pool = await contract.getCurrentNumPlayers();
-        setPoolSize(pool.toNumber());
-      } catch (error) {
-        console.error(error);
-      }
-    };
-    getPoolSize();
-    const intervalId = setInterval(getPoolSize, 1000);
-    return () => clearInterval(intervalId);
-  }, []);
-
-  const hasPlayerNumbers =
-    playerNumbers.length > 0 && !playerNumbers.every((num) => num === 0);
-
-  const [hasPlayed, setHasPlayed] = useState(false);
-  const handlePlay = async () => {
+  // Check the position number(s) of the connected address
+  const getPlayerNumber = async () => {
     try {
-      setHasPlayed(true);
-
-      await write({ value: parseEther("0.01") });
-      // Force immediate refresh
       const array = await contractRef.current!.getPlayerNumber(address);
       setPlayerNumbers(array.map((num: BigNumber) => num.toNumber()));
     } catch (error) {
       console.error(error);
+    }
+  };
+
+  // Check if the player was the last winner
+  const isLastWinner = async () => {
+    if (!contract || !address) return;
+    try {
+      const bool = await contract.isLastWinner(address);
+      setLastWinner(bool);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  // Get current pool size, in this round
+  const getPoolSize = async () => {
+    if (!contract) return;
+    try {
+      const pool = await contract.getCurrentNumPlayers();
+      setPoolSize(pool.toNumber());
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  // UseEffect when the address changes
+  useEffect(() => {
+    setErrorMessage(null);
+    setLastWinner(false);
+    setPlayerNumbers(null);
+    setTxHash(null);
+
+    if (!contractRef.current || !address) return;
+
+    isLastWinner();
+    getPlayerNumber();
+  }, [address]);
+
+  // Get current pool size on load
+  useEffect(() => {
+    getPoolSize();
+  }, []);
+
+  const handlePlay = async () => {
+    try {
+      setGameStarted(true);
+      const hash = await writeContractAsync({
+        address: contractAddress,
+        abi: contractABI,
+        functionName: "play",
+        value: parseEther("0.01"),
+      });
+
+      console.log("tx hash:", hash);
+      setTxHash(hash);
+      const receipt = await publicClient!.waitForTransactionReceipt({ hash });
+      console.log("receipt:", receipt);
+      setGameStarted(false);
+      getPoolSize();
+      getPlayerNumber();
+    } catch (err) {
+      console.error("error:", err);
+      setErrorMessage("Transaction failed. Please try again.");
     }
   };
 
@@ -266,25 +245,18 @@ const Play = () => {
             {errorMessage}
           </p>
         )}
-
+        {/* 
         {isLoading && (
           <span className="text-gray-500">
             (Validate transaction on your wallet)
           </span>
-        )}
+        )} */}
       </div>
 
       {/* Player Info */}
       <div className="space-y-6 text-gray-700">
         <div className="text-center">
-          {hasPlayerNumbers && !hasPlayed ? (
-            <p>
-              You've been successfully registered with number
-              {playerNumbers.filter((num) => num !== 0).length > 1
-                ? "s"
-                : ""}: {playerNumbers.filter((num) => num !== 0).join(", ")}.
-            </p>
-          ) : hasPlayed && address && !errorMessage && data ? (
+          {gameStarted && txHash && !errorMessage ? (
             <div className="inline-flex items-center justify-center space-x-3 bg-indigo-50 px-4 py-2 rounded-lg shadow-sm">
               <svg
                 className="animate-spin h-6 w-6 text-indigo-600"
@@ -309,7 +281,7 @@ const Play = () => {
               <span className="text-indigo-700 font-medium text-sm">
                 Waiting for your{" "}
                 <a
-                  href={`https://sepolia.etherscan.io/tx/${data.hash}`}
+                  href={`https://sepolia.etherscan.io/tx/${txHash}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="underline"
@@ -319,8 +291,13 @@ const Play = () => {
                 confirmation to display your player number...
               </span>
             </div>
+          ) : nonZeroNumbers.length > 0 ? (
+            <p>
+              You've been successfully registered as participant number{" "}
+              {nonZeroNumbers.join(", ")} in the pool.
+            </p>
           ) : (
-            isSuccess && <p>success</p>
+            <p>{nonZeroNumbers}</p>
           )}
         </div>
 
@@ -330,17 +307,13 @@ const Play = () => {
         </p>
 
         {/* Winner Messages */}
-        {address &&
-          !lastWinner &&
-          !hasPlayerNumbers &&
-          hasPlayed &&
-          !errorMessage && (
-            <p className="font-semibold text-center text-red-600">
-              You didn't win the last round of roulette. Try again!
-            </p>
-          )}
+        {address && !lastWinner && !errorMessage && (
+          <p className="font-semibold text-center text-red-600">
+            You didn't win the last round of roulette. Try again!
+          </p>
+        )}
 
-        {lastWinner && !hasPlayerNumbers && (
+        {lastWinner && (
           <p className="font-bold text-center text-green-600">
             YOU WON THE ROULETTE! CONGRATULATIONS! THE ETH IS BEING SENT TO YOUR
             WALLET!
@@ -352,9 +325,7 @@ const Play = () => {
           <img
             src={barrel}
             alt="barrel"
-            className={`w-32 h-32 ${
-              lastWinner && !hasPlayerNumbers ? "animate-spin" : ""
-            }`}
+            className={`w-32 h-32 ${lastWinner ? "animate-spin" : ""}`}
           />
         </div>
       </div>

@@ -2,42 +2,25 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import "./index.css";
 import App from "./App";
-import { configureChains, createConfig, WagmiConfig } from "wagmi";
-import { publicProvider } from "wagmi/providers/public";
-import { getDefaultWallets, RainbowKitProvider } from "@rainbow-me/rainbowkit";
-import { mainnet, sepolia } from "wagmi/chains";
 import "@rainbow-me/rainbowkit/styles.css";
 
-// ToDo: add MainNet for prod
-const { chains, publicClient } = configureChains(
-  [
-    {
-      ...sepolia,
-      rpcUrls: {
-        ...sepolia.rpcUrls,
-        default: {
-          http: ["https://gateway.tenderly.co/public/sepolia"],
-        },
-        public: {
-          http: ["https://gateway.tenderly.co/public/sepolia"],
-        },
-      },
-    },
-  ],
-  [publicProvider()]
-);
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { WagmiProvider, http } from "wagmi";
+import { getDefaultConfig, RainbowKitProvider } from "@rainbow-me/rainbowkit";
+import { sepolia } from "wagmi/chains";
 
-const { connectors } = getDefaultWallets({
+// ✅ Create wagmi + rainbow config
+const config = getDefaultConfig({
   appName: "rouleth",
   projectId: "2d05a2fa95c4d9f74c4ef725b7af8bdd",
-  chains,
+  chains: [sepolia],
+  transports: {
+    [sepolia.id]: http("https://gateway.tenderly.co/public/sepolia"),
+  },
 });
 
-const wagmiConfig = createConfig({
-  autoConnect: true,
-  connectors,
-  publicClient,
-});
+// ✅ Create QueryClient (required by wagmi v2)
+const queryClient = new QueryClient();
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
@@ -45,10 +28,12 @@ const root = ReactDOM.createRoot(
 
 root.render(
   <React.StrictMode>
-    <WagmiConfig config={wagmiConfig}>
-      <RainbowKitProvider chains={chains}>
-        <App />
-      </RainbowKitProvider>
-    </WagmiConfig>
+    <QueryClientProvider client={queryClient}>
+      <WagmiProvider config={config}>
+        <RainbowKitProvider>
+          <App />
+        </RainbowKitProvider>
+      </WagmiProvider>
+    </QueryClientProvider>
   </React.StrictMode>
 );
